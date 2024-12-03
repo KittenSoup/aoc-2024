@@ -19,7 +19,7 @@ const getValidInputs = (input) => {
   // valid means the string should be included
   const findValidInput = (input: string, valid?: boolean) => {
     // from start until this position, everything is valid
-    if (!input.length) return validInputs;
+    if (!input.length) return;
     if (typeof valid === "undefined" || valid) {
       const startingPoint = input.indexOf("don't()");
       validInputs += `${input.slice(0, startingPoint)}`;
@@ -29,7 +29,7 @@ const getValidInputs = (input) => {
       if (endOfInvalidInputs > 0) {
         findValidInput(input.slice(endOfInvalidInputs+"do()".length), true);
       } else {
-        return validInputs;
+        return;
       } 
     }
   }
