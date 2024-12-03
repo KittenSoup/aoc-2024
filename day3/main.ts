@@ -3,12 +3,12 @@ const input = await Deno.readTextFile("input.txt");
 
 const multiply = (op: string) => {
   if (op) {
-  //@ts-ignore
-  return op
-    .match(/\d+,\d+/g)[0]
-    .split(",")
-    .map((n) => parseInt(n, 10))
-    .reduce((val, acc) => val * acc, 1);
+    //@ts-ignore
+    return op
+      .match(/\d+,\d+/g)[0]
+      .split(",")
+      .map((n) => parseInt(n, 10))
+      .reduce((val, acc) => val * acc, 1);
   } else {
     return 0;
   }
@@ -18,35 +18,38 @@ const getValidInputs = (input) => {
   let validInputs = "";
   // valid means the string should be included
   const findValidInput = (input: string, valid?: boolean) => {
-    // from start until this position, everything is valid
     if (!input.length) return;
+
     if (typeof valid === "undefined" || valid) {
+      // from start until this position, everything is valid
       const startingPoint = input.indexOf("don't()");
       validInputs += `${input.slice(0, startingPoint)}`;
-      findValidInput(input.slice(startingPoint+"don't()".length), false);
+      findValidInput(input.slice(startingPoint + "don't()".length), false);
     } else if (!valid) {
       const endOfInvalidInputs = input.indexOf("do()");
       if (endOfInvalidInputs > 0) {
-        findValidInput(input.slice(endOfInvalidInputs+"do()".length), true);
+        findValidInput(input.slice(endOfInvalidInputs + "do()".length), true);
       } else {
         return;
-      } 
+      }
     }
-  }
+  };
   findValidInput(input);
   return validInputs;
-}
+};
 
 const pt1 = (input: string) => {
   const mulOperations = input.match(/mul\(\d+,\d+\)/g);
   if (!mulOperations) return;
-  const result = mulOperations.map((op: string) => multiply(op)).reduce((val, acc) => val+acc, 0)
+  const result = mulOperations
+    .map((op: string) => multiply(op))
+    .reduce((val, acc) => val + acc, 0);
   return result;
 };
 
 const pt2 = (input: string) => {
   const inputs = getValidInputs(input);
-  return pt1(inputs)
+  return pt1(inputs);
 };
 
 // Learn more at https://docs.deno.com/runtime/manual/examples/module_metadata#concepts
