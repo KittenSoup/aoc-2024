@@ -14,24 +14,27 @@ const multiply = (op: string) => {
   }
 };
 
-let validInputs = "";
-
-// valid means the string should be included
-const findValidInput = (input: string, valid?: boolean) => {
-  // from start until this position, everything is valid
-  if (!input.length) return validInputs;
-  if (typeof valid === "undefined" || valid) {
-    const startingPoint = input.indexOf("don't()");
-    validInputs += `${input.slice(0, startingPoint)}`;
-    findValidInput(input.slice(startingPoint+"don't()".length), false);
-  } else if (!valid) {
-    const endOfInvalidInputs = input.indexOf("do()");
-    if (endOfInvalidInputs > 0) {
-      findValidInput(input.slice(endOfInvalidInputs+"do()".length), true);
-    } else {
-      return validInputs;
-    } 
+const getValidInputs = (input) => {
+  let validInputs = "";
+  // valid means the string should be included
+  const findValidInput = (input: string, valid?: boolean) => {
+    // from start until this position, everything is valid
+    if (!input.length) return validInputs;
+    if (typeof valid === "undefined" || valid) {
+      const startingPoint = input.indexOf("don't()");
+      validInputs += `${input.slice(0, startingPoint)}`;
+      findValidInput(input.slice(startingPoint+"don't()".length), false);
+    } else if (!valid) {
+      const endOfInvalidInputs = input.indexOf("do()");
+      if (endOfInvalidInputs > 0) {
+        findValidInput(input.slice(endOfInvalidInputs+"do()".length), true);
+      } else {
+        return validInputs;
+      } 
+    }
   }
+  findValidInput(input);
+  return validInputs;
 }
 
 const pt1 = (input: string) => {
@@ -42,8 +45,8 @@ const pt1 = (input: string) => {
 };
 
 const pt2 = (input: string) => {
-  findValidInput(input);
-  return pt1(validInputs)
+  const inputs = getValidInputs(input);
+  return pt1(inputs)
 };
 
 // Learn more at https://docs.deno.com/runtime/manual/examples/module_metadata#concepts
